@@ -1,0 +1,6 @@
+# Editor Settings
+.vscode/
+.idea/
+
+# Environment Variables
+*.env

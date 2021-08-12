@@ -21,11 +21,11 @@ export async function connectPogSocket(uri: string, options: PogSocketOptions = 
     switch (url.protocol) {
         case "http:":
         case "ws:":
-            conn = await Deno.connect({ hostname: url.hostname, port: +(url.port ?? 80) });
+            conn = await Deno.connect({ hostname: url.hostname, port: +(url.port || 80) });
             break;
         case "https:":
         case "wss:":
-            conn = await Deno.connectTls({ hostname: url.hostname, port: +(url.port ?? 443) })
+            conn = await Deno.connectTls({ hostname: url.hostname, port: +(url.port || 443) })
             break;
         default:
             throw new TypeError(`Unsupported protocol: ${url.protocol}`);

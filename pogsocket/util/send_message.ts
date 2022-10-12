@@ -1,8 +1,7 @@
-import { OpCode, WebSocketMessage } from "../deps.ts";
-import { isBinaryMessage } from "./is_binary.ts";
 import { sendFrame } from "./send_frame.ts";
 
 import type { PogSocket } from "../socket.ts";
+import { OpCode, WebSocketMessage, isBinaryMessage } from "../../websocket/mod.ts";
 
 /**
  * Sends a message to the server.

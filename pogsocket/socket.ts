@@ -1,4 +1,5 @@
-import { BufReader, WebSocketFrame, Deferred, BufWriter, writeFrame, deferred } from "./deps.ts";
+import { BufReader, BufWriter, Deferred, deferred } from "./deps.ts";
+import { WebSocketFrame, writeFrame } from "../websocket/mod.ts";
 
 export function createPogSocket({ conn, reader, writer, mask }: PogSocketInit): PogSocket {
     return {

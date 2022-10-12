@@ -1,21 +1,19 @@
-import { OpCode } from "../deps.ts";
-import { decoder } from "../encoding.ts";
-import { closeSocket, closeSocketConnection } from "./close_socket.ts";
-import { readFrame } from "./read_frame.ts";
+import { decoder } from "../../encoding.ts";
+import { WebSocketFrame, OpCode, readUnmaskedFrame } from "../../websocket/mod.ts";
+import { closeSocketConnection, closeSocket } from "./close_socket.ts";
 import { sendFrame } from "./send_frame.ts";
 
 import type { PogSocket } from "../socket.ts";
-import type { WebSocketFrame } from "../deps.ts";
 
 function getLength(frames: WebSocketFrame[]): number {
     return frames.reduce((length, frame) => length + frame.payload.length, 0);
 }
 
 function getCloseEvent(frame: WebSocketFrame, decode = decoder()): CloseEvent {
-    return { 
+    return {
         // [0x12, 0x34] -> 0x1234
-        code: (frame.payload[0] << 8) | frame.payload[1], 
-        reason: decode(frame.payload.subarray(2, frame.payload.length)), 
+        code: (frame.payload[0] << 8) | frame.payload[1],
+        reason: decode(frame.payload.subarray(2, frame.payload.length)),
         type: "close"
     }
 }
@@ -26,7 +24,7 @@ export async function* readSocket(socket: PogSocket): AsyncIterableIterator<PogS
     /* handle frames. */
     let frames: WebSocketFrame[] = [];
     while (!socket.isClosed) {
-        const frame = await readFrame(socket);
+        const frame = await readUnmaskedFrame(socket.reader);
         if (!frame) {
             closeSocketConnection(socket);
             break;
@@ -62,7 +60,7 @@ export async function* readSocket(socket: PogSocket): AsyncIterableIterator<PogS
                 const event = getCloseEvent(frame, decode);
                 await closeSocket(socket, event.code, event.reason);
                 yield event;
-                break;
+                return;
             }
             case OpCode.Ping:
                 await sendFrame(socket, OpCode.Pong, frame.payload);
@@ -73,6 +71,8 @@ export async function* readSocket(socket: PogSocket): AsyncIterableIterator<PogS
                 break;
         }
     }
+
+    yield { code: 1006, reason: "Server did not send close frame", type: "close" }
 }
 
 export type PogSocketEvent = MessageEvent | PingEvent | PongEvent | CloseEvent;

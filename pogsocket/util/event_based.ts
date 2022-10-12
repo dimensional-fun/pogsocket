@@ -1,7 +1,7 @@
 import { readSocket } from "./read_socket.ts";
 
-import type { WebSocketMessage } from "../deps.ts";
 import type { PogSocket } from "../socket.ts";
+import type { WebSocketMessage } from "../../websocket/mod.ts";
 
 export interface EventHandlers {
     message?: (data: WebSocketMessage) => void;

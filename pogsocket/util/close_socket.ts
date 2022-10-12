@@ -1,8 +1,7 @@
-import { OpCode } from "../deps.ts";
-import { encoder } from "../encoding.ts";
+import { encoder } from "../../encoding.ts";
+import { OpCode } from "../../websocket/mod.ts";
+import { PogSocket } from "../socket.ts";
 import { sendFrame } from "./send_frame.ts";
-
-import type { PogSocket } from "../socket.ts";
 
 const encode = encoder()
 

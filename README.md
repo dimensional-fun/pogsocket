@@ -1,6 +1,6 @@
 # PogSocket
 
-> Deno websocket client (based on the original deno websocket client).
+> A functional deno websocket client!
 
 ## Usage
 
@@ -18,6 +18,11 @@ for await (const event of readSocket(socket)) {
     }
 }
 ```
+
+## Acknowledgements
+
+- [_/websocket_](/websocket) (and parts of [_/pogsocket_](/pogsocket)) were originally written by the **Deno Authors**, this couldn't have been done without them :)
+
 
 ---
 

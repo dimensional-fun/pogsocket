@@ -12,12 +12,11 @@ export async function handshake(
     bufReader: BufReader,
     bufWriter: BufWriter,
 ) {
-    const { hostname, pathname, search } = url;
-    const key = createSecKey();
-
+    const { hostname, pathname, search } = url, key = createSecKey();
     if (!headers.has("host")) {
         headers.set("host", hostname);
     }
+    
     headers.set("upgrade", "websocket");
     headers.set("connection", "upgrade");
     headers.set("sec-websocket-key", key);
@@ -29,7 +28,7 @@ export async function handshake(
     }
     headerStr += "\r\n";
 
-    await bufWriter.write(new TextEncoder().encode(headerStr));
+    await bufWriter.write(encode(headerStr));
     await bufWriter.flush();
 
     // TODO: remove use of deprecated class.
